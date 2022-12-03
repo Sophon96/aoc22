@@ -1,6 +1,6 @@
 import string
 
-ifp = open('input.txt', 'r')
+ifp = open("input.txt", "r")
 imap = (0,) + tuple(string.ascii_letters)
 
 net_prio = 0

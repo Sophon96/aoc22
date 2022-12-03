@@ -1,9 +1,9 @@
-ifp = open('input.txt', 'r')
+ifp = open("input.txt", "r")
 
 top3 = [0, 0, 0]
 current_sum = 0
 for line in ifp:
-    if line == '\n':
+    if line == "\n":
         if current_sum > top3[2]:
             top3[2] = current_sum
             top3.sort(reverse=True)
