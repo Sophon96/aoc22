@@ -1,23 +1,28 @@
 import re
-import pathlib
+from pathlib import Path
 from collections import defaultdict
 
 ifp = open("input.txt", "r")
 
 dirs = defaultdict(lambda: 0)
-current_dir = pathlib.Path("/")
+current_dir: Path = Path("/")
 for line in ifp:
-    command, arg = re.findall(r"(?:^\$ (cd|ls) ?(.*)$)?", line)[0]
-    match command:
+    arg1, arg2 = re.findall(r"(cd|ls|\d+|dir) ?(.*)$", line)[0]
+    match arg1:
         case "cd":
-            current_dir = current_dir / arg if arg != ".." else current_dir.parent
-        case "cd" | "ls": continue
+            if arg2 == "..":
+                current_dir = current_dir.parent
+            elif arg2 == "/":
+                current_dir = Path("/")
+            else:
+                current_dir /= arg2
 
-    size, name = re.findall(r"(?:^(\d+|dir) (.*)$)?", line)[0]
-    if size.isdigit():
-        dirs[current_dir] += int(size)
-        for p in current_dir.parents:
-            dirs[p] += int(size)
+        case "ls" | "dir": continue
+
+        case _:
+            dirs[current_dir] += int(arg2)
+            for p in current_dir.parents:
+                dirs[p] += int(arg2)
 
 ifp.close()
 needed_space = max(dirs.values()) - 40000000
